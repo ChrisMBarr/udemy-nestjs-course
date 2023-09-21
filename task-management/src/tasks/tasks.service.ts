@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ITask, TaskStatusEnum } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -36,10 +36,18 @@ export class TasksService {
   }
 
   getTaskById(id: string): ITask {
-    return this.tasks.find((t) => t.id === id);
+    const foundTask = this.tasks.find((t) => t.id === id);
+
+    if (!foundTask) {
+      throw new NotFoundException(`Task with id '${id}' not found.`);
+    }
+
+    return foundTask;
   }
 
   deleteTask(id: string): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const found = this.getTaskById(id);
     this.tasks = this.tasks.filter((t) => t.id !== id);
   }
 
