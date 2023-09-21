@@ -1,0 +1,18 @@
+{
+  "files.exclude": {
+      "**/*.json": false,
+      "**/.gitignore": true,
+      "**/.gitkeep": true,
+      ".editorconfig": true,
+      ".prettierrc": true,
+      "coverage": true,
+      "dist": true,
+      "node_modules": true,
+    },
+    "explorer.fileNesting.patterns": {
+      "tsconfig.json": "tsconfig.*.json",
+      "package.json": "package-lock.json"
+    },
+    "explorer.fileNesting.expand": false,
+    "material-icon-theme.activeIconPack": "nest"
+}
