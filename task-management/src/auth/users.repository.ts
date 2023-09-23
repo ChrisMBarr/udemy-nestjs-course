@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { Repository, DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -11,6 +12,8 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
 @Injectable()
 export class UsersRepository extends Repository<UserEntity> {
+  private logger = new Logger('UsersRepository', { timestamp: true });
+
   constructor(dataSource: DataSource) {
     super(UserEntity, dataSource.createEntityManager());
   }
@@ -26,8 +29,10 @@ export class UsersRepository extends Repository<UserEntity> {
     } catch (ex) {
       if (ex.code === '23505') {
         //23505 is the code for a duplicate user detected in the DB
+        this.logger.error(`User "${user.username}" already exists!`, ex.stack);
         throw new ConflictException('Username already exists');
       } else {
+        this.logger.error(`Unable to create user "${user.username}"`, ex.stack);
         throw new InternalServerErrorException();
       }
     }

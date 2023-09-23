@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Logger,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -22,6 +23,8 @@ import { GetUser } from 'src/auth/get-user.decorator';
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private logger = new Logger('TasksController', { timestamp: true });
+
   constructor(private tasksSvc: TasksService) {}
 
   @Get()
@@ -29,6 +32,11 @@ export class TasksController {
     @Query() filterDto: GetTasksFilterDto,
     @GetUser() user: UserEntity,
   ): Promise<Array<TaskEntity>> {
+    this.logger.verbose(
+      `Retrieving all tasks for user "${
+        user.username
+      }". Filters: ${JSON.stringify(filterDto)}`,
+    );
     return this.tasksSvc.getTasks(filterDto, user);
   }
 
@@ -37,6 +45,9 @@ export class TasksController {
     @Param('id') id: string,
     @GetUser() user: UserEntity,
   ): Promise<TaskEntity> {
+    this.logger.verbose(
+      `Retrieving task with ID "${id}" for user "${user.username}"`,
+    );
     return this.tasksSvc.getTaskById(id, user);
   }
 
@@ -45,6 +56,9 @@ export class TasksController {
     @Param('id') id: string,
     @GetUser() user: UserEntity,
   ): Promise<void> {
+    this.logger.verbose(
+      `Deleting task with ID "${id}" for user "${user.username}"`,
+    );
     return this.tasksSvc.deleteTask(id, user);
   }
 
@@ -55,6 +69,9 @@ export class TasksController {
     @GetUser() user: UserEntity,
   ): Promise<TaskEntity> {
     const { status } = updateTaskStatusDto;
+    this.logger.verbose(
+      `Updating task ID "${id}" with new status "${status}", for user "${user.username}"`,
+    );
     return this.tasksSvc.updateTaskStatus(id, status, user);
   }
 
@@ -63,7 +80,11 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: UserEntity,
   ): Promise<TaskEntity> {
-    const task = this.tasksSvc.createTask(createTaskDto, user);
-    return task;
+    this.logger.verbose(
+      `User "${user.username}" created a task: ${JSON.stringify(
+        createTaskDto,
+      )}`,
+    );
+    return this.tasksSvc.createTask(createTaskDto, user);
   }
 }
