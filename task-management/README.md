@@ -27,7 +27,12 @@
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
+First install this globally required packages
+```bash
+$ npm install -g cross-env
+```
 
+Next install the local packages
 ```bash
 $ npm install
 ```
