@@ -6,7 +6,7 @@ import { TaskStatusEnum } from './task-status.enum';
 import { TasksRepository } from './tasks.repository';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-import { UserEntity } from 'src/auth/user.entity';
+import { UserEntity } from '../auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -34,7 +34,9 @@ export class TasksService {
   async deleteTask(id: string, user: UserEntity): Promise<void> {
     const result = await this.tasksRepository.delete({ id, user });
     if (result.affected === 0) {
-      throw new NotFoundException(`Task with ID "${id}" not found!`);
+      throw new NotFoundException(
+        `Cannot delete with ID "${id}" because it cannot be found!`,
+      );
     }
   }
 

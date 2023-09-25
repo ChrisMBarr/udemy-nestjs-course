@@ -9,7 +9,7 @@ import { TaskEntity } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatusEnum } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
-import { UserEntity } from 'src/auth/user.entity';
+import { UserEntity } from '../auth/user.entity';
 
 @Injectable()
 export class TasksRepository extends Repository<TaskEntity> {

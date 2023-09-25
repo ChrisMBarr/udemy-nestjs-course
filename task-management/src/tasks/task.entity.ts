@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatusEnum } from './task-status.enum';
-import { UserEntity } from 'src/auth/user.entity';
+import { UserEntity } from '../auth/user.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -17,7 +17,7 @@ export class TaskEntity {
   @Column()
   status: TaskStatusEnum;
 
-  @ManyToOne((_type) => UserEntity, (user) => user.tasks, { eager: false })
+  @ManyToOne(() => UserEntity, (user) => user.tasks, { eager: false })
   @Exclude({ toPlainOnly: true }) //hide from response objects
   user: UserEntity;
 }
