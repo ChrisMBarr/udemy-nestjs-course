@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
@@ -33,5 +33,24 @@ export class StudentService {
     });
 
     return this.studentRepository.save(student);
+  }
+
+  async getManyStudents(
+    studentIds: Array<string>,
+  ): Promise<Array<StudentEntity>> {
+    try {
+      if (typeof studentIds !== 'object' || studentIds.length < 1) {
+        return [];
+      }
+      const students = await this.studentRepository.find({
+        where: { id: { $in: [...studentIds] } as any },
+      });
+
+      return students;
+    } catch (error) {
+      console.log(error);
+
+      throw new InternalServerErrorException();
+    }
   }
 }
